@@ -39,13 +39,15 @@ module.exports = function (User) {
         await User.isDataValid(userData);
         const usernames = await db.getSortedSetRange('registration:queue', 0, -1);
         if (usernames.includes(userData.username)) {
-            throw new Error('[[error:username-taken]]');
+            throw new Error(`Username taken. Maybe try ${userData.username}-100.`);
+            // throw new Error('[[error:username-taken]]');
         }
         const keys = usernames.filter(Boolean).map(username => `registration:queue:name:${username}`);
         const data = await db.getObjectsFields(keys, ['email']);
         const emails = data.map(data => data && data.email).filter(Boolean);
         if (userData.email && emails.includes(userData.email)) {
-            throw new Error('[[error:email-taken]]');
+            throw new Error(`Username taken. Maybe try ${userData.username}-100.`);
+            // throw new Error('[[error:email-taken]]');
         }
     }
 
